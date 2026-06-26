@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spendly – Personal Expense Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    /* ── CSS Variables (self-contained) ── */
+    :root {
+      --bg:           #ffffff;
+      --surface:      #f8f9fb;
+      --surface-2:    #f0f2f5;
+      --border:       #e8eaed;
+      --text:         #111827;
+      --text-muted:   #6b7280;
+      --text-subtle:  #9ca3af;
+      --accent:       #6366f1;
+      --accent-dark:  #4f46e5;
+      --accent-muted: #eef2ff;
+      --income:       #22c55e;
+      --income-muted: #dcfce7;
+      --expense:      #ef4444;
+      --expense-muted:#fee2e2;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #ffffff;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+
+    /* ── Landing-specific layout ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* left panel */
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 64px;
+      background: var(--bg);
+      position: relative;
+      z-index: 2;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 72px;
+    }
+    .brand-icon {
+      width: 40px; height: 40px;
+      background: var(--accent);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+    }
+    .brand-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--accent-muted);
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+    }
+
+    .hero-headline {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.05;
+      color: var(--text);
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+    }
+    .hero-headline em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 400px;
+      margin-bottom: 48px;
+      font-weight: 300;
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: #6366f1;
+      color: #ffffff;
+      display: inline-block;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      letter-spacing: 0.3px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(99,102,241,0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #111827;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border: 1.5px solid #e8eaed;
+      display: inline-block;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover {
+      border-color: #6366f1;
+      background: #eef2ff;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 40px;
+      margin-top: 64px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    .stat-item strong {
+      display: block;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -1px;
+    }
+    .stat-item span {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* right panel */
+    .hero-right {
+      background: #f8f9fb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-right::before {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99,102,241,0.10) 0%, transparent 70%);
+      top: -80px; right: -80px;
+    }
+
+    /* illustration panel */
+    .illus-wrap {
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      z-index: 2;
+    }
+    .illus-badge {
+      display: inline-block;
+      background: #eef2ff;
+      color: #6366f1;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+      width: fit-content;
+    }
+    .illus-card {
+      background: #ffffff;
+      border: 1px solid #e8eaed;
+      border-radius: 14px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .illus-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .illus-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .illus-text { flex: 1; }
+    .illus-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+    .illus-sub {
+      font-size: 0.76rem;
+      color: #6b7280;
+      line-height: 1.45;
+    }
+    .illus-nudge {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: #6366f1;
+      font-weight: 600;
+      padding-left: 4px;
+    }
+
+
+    /* features strip */
+    .features {
+      background: var(--bg);
+      padding: 80px 64px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .feature-card {
+      padding: 28px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    }
+    .feature-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: var(--accent-muted);
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      margin-bottom: 18px;
+    }
+    .feature-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .feature-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* footer */
+    .footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 28px 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-left {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-links a {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* responsive */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 60px 28px; }
+      .features { grid-template-columns: 1fr; padding: 60px 28px; }
+      .footer { flex-direction: column; gap: 16px; padding: 28px; }
+      .stats-row { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+
+  <!-- LEFT -->
+  <div class="hero-left">
+    <div class="brand">
+      <div class="brand-icon">💸</div>
+      <span class="brand-name">Spendly</span>
+    </div>
+
+    <span class="hero-tag">Personal Finance Tracker</span>
+
+    <h1 class="hero-headline">
+      Know where<br/>every rupee<br/><em>goes.</em>
+    </h1>
+
+    <p class="hero-sub">
+      Track income &amp; expenses, visualise spending patterns,
+      and take control of your money — all stored privately on your device.
+    </p>
+
+    <div class="cta-group">
+      <a href="signup.html" class="btn-primary">Sign Up — It's Free</a>
+      <a href="login.html" class="btn-outline">Log In</a>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-item">
+        <strong>100%</strong>
+        <span>Local &amp; Private</span>
+      </div>
+      <div class="stat-item">
+        <strong>0₹</strong>
+        <span>Always Free</span>
+      </div>
+      <div class="stat-item">
+        <strong>∞</strong>
+        <span>Transactions</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT – feature illustration (no fake data) -->
+  <div class="hero-right">
+    <div class="illus-wrap">
+      <div class="illus-badge">✨ What you get</div>
+
+      <div class="illus-card">
+        <div class="illus-icon" style="background:#eef2ff;">📊</div>
+        <div class="illus-text">
+          <div class="illus-title">Track Every Transaction</div>
+          <div class="illus-sub">Add income &amp; expenses in seconds, with categories &amp; notes.</div>
+        </div>
+      </div>
+
+      <div class="illus-card">
+        <div class="illus-icon" style="background:#dcfce7;">📅</div>
+        <div class="illus-text">
+          <div class="illus-title">Monthly &amp; Yearly Reports</div>
+          <div class="illus-sub">See where your money goes, month by month, at a glance.</div>
+        </div>
+      </div>
+
+      <div class="illus-card">
+        <div class="illus-icon" style="background:#fef3c7;">🗂️</div>
+        <div class="illus-text">
+          <div class="illus-title">Category Breakdown</div>
+          <div class="illus-sub">Food, rent, travel, health — know your biggest spending areas.</div>
+        </div>
+      </div>
+
+      <div class="illus-card">
+        <div class="illus-icon" style="background:#fee2e2;">🔒</div>
+        <div class="illus-text">
+          <div class="illus-title">100% Private &amp; Offline</div>
+          <div class="illus-sub">Your data never leaves your device. No cloud, no risk.</div>
+        </div>
+      </div>
+
+      <div class="illus-nudge">
+        Sign up free and start tracking in under a minute →
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FEATURES ═══════════════ -->
+<section class="features">
+  <div class="feature-card">
+    <div class="feature-icon">📊</div>
+    <div class="feature-title">Visual Reports</div>
+    <div class="feature-desc">Monthly &amp; yearly summaries with category breakdowns so you always know where your money is going.</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🗂️</div>
+    <div class="feature-title">Category Tracking</div>
+    <div class="feature-desc">Organise transactions into custom categories — Food, Travel, EMI, Entertainment &amp; more.</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🔒</div>
+    <div class="feature-title">100% Offline &amp; Private</div>
+    <div class="feature-desc">All data lives in your browser's localStorage. No server, no account fees, no data sharing.</div>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  <div class="footer-left">© 2026 Spendly. Built for personal use.</div>
+  <nav class="footer-links">
+    <a href="signup.html">Sign Up</a>
+    <a href="about.html">About</a>
+    <a href="faq.html">FAQ</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</footer>
+
+<script src="js/main.js"></script>
+
+</body>
+</html>

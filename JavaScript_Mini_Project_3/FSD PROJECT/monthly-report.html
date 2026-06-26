@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Monthly Report - Spendly</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+
+<header class="nav">
+  <h2>Monthly Report</h2>
+  <a href="reports.html" class="btn">← Back</a>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <label>Select Month:</label>
+    <select id="month" class="form-select"></select>
+  </div>
+
+  <div class="cards">
+    <div class="card income">
+      <h3>Income</h3>
+      <p id="income">₹0</p>
+    </div>
+
+    <div class="card expense">
+      <h3>Expense</h3>
+      <p id="expense">₹0</p>
+    </div>
+
+    <div class="card balance">
+      <h3>Balance</h3>
+      <p id="balance">₹0</p>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/transactions.js"></script>
+
+<script>
+const user = localStorage.getItem("spendly_current_user");
+if (!user) window.location.href = "login.html";
+
+const txns = getTransactions(user);
+
+// dropdowns
+const monthSelect = document.getElementById("month");
+
+// 👉 ADD YEAR DROPDOWN (IMPORTANT)
+const yearSelect = document.createElement("select");
+yearSelect.id = "year";
+monthSelect.parentNode.appendChild(yearSelect);
+
+// fill months
+for (let i = 1; i <= 12; i++) {
+  monthSelect.innerHTML += `<option value="${i}">${i}</option>`;
+}
+
+// fill years dynamically
+const years = [...new Set(txns.map(t => new Date(t.date).getFullYear()))];
+years.forEach(y => {
+  yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+});
+
+// trigger
+monthSelect.addEventListener("change", generate);
+yearSelect.addEventListener("change", generate);
+
+function generate() {
+  const month = Number(monthSelect.value);
+  const year = Number(yearSelect.value);
+
+  let income = 0, expense = 0;
+
+  txns.forEach(t => {
+    const d = new Date(t.date);
+
+    const m = d.getMonth() + 1;
+    const y = d.getFullYear();
+
+    if (m === month && y === year) {
+      const amt = Number(t.amount) || 0;
+
+      if (t.type === "income") income += amt;
+      else expense += amt;
+    }
+  });
+
+  document.getElementById("income").textContent = "₹" + income;
+  document.getElementById("expense").textContent = "₹" + expense;
+  document.getElementById("balance").textContent = "₹" + (income - expense);
+}
+</script>
+
+</body>
+</html>

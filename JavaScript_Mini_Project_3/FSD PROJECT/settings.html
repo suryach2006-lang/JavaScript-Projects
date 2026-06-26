@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Settings - Spendly</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/forms.css">
+</head>
+
+<body class="auth-body">
+
+<div class="auth-form-panel">
+  <div class="auth-form-wrap">
+
+    <h2 class="auth-form-title">Settings</h2>
+
+    <form id="passwordForm" class="auth-form">
+
+      <div class="form-group">
+        <label class="form-label">Current Password</label>
+        <input type="password" id="current" class="form-input no-icon">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">New Password</label>
+        <input type="password" id="new" class="form-input no-icon">
+      </div>
+
+      <button type="submit" class="btn btn-full">Change Password</button>
+
+    </form>
+
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+
+<script>
+const user = localStorage.getItem("spendly_current_user");
+if (!user) window.location.href = "login.html";
+
+document.getElementById("passwordForm").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const current = document.getElementById("current").value;
+  const newPass = document.getElementById("new").value;
+
+  const result = changePassword(current, newPass);
+
+  if (result.success) {
+    alert("Password changed");
+  } else {
+    alert(result.message);
+  }
+});
+</script>
+
+</body>
+</html>

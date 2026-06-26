@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Category Report</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+
+<header class="nav">
+  <h2>Category Report</h2>
+  <a href="reports.html" class="btn">← Back</a>
+</header>
+
+<div class="container">
+
+  <div id="result" class="cards"></div>
+
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/transactions.js"></script>
+
+<script>
+const user = localStorage.getItem("spendly_current_user");
+if (!user) window.location.href = "login.html";
+
+const txns = getTransactions(user);
+
+const map = {};
+
+txns.forEach(t => {
+  if (t.type === "expense") {
+    map[t.category] = (map[t.category] || 0) + t.amount;
+  }
+});
+
+let html = "";
+
+for (let cat in map) {
+  html += `
+    <div class="card">
+      <h3>${cat}</h3>
+      <p>₹${map[cat]}</p>
+
+      <div style="height:6px;background:#eee;border-radius:4px;">
+        <div style="
+          width:${map[cat] / 10}%;
+          height:100%;
+          background:var(--accent);
+          border-radius:4px;
+        "></div>
+      </div>
+    </div>
+  `;
+}
+
+document.getElementById("result").innerHTML = html;
+
+document.getElementById("result").innerHTML = html;
+</script>
+
+</body>
+</html>

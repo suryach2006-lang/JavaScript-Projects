@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Yearly Report</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+
+<header class="nav">
+  <h2>Yearly Report</h2>
+  <a href="reports.html" class="btn">← Back</a>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <label>Select Year:</label>
+    <select id="year" class="form-select"></select>
+  </div>
+
+  <div class="cards">
+    <div class="card income">
+      <h3>Income</h3>
+      <p id="income">₹0</p>
+    </div>
+
+    <div class="card expense">
+      <h3>Expense</h3>
+      <p id="expense">₹0</p>
+    </div>
+
+    <div class="card balance">
+      <h3>Balance</h3>
+      <p id="balance">₹0</p>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/transactions.js"></script>
+
+<script>
+const user = localStorage.getItem("spendly_current_user");
+if (!user) window.location.href = "login.html";
+
+const txns = getTransactions(user);
+
+const yearSelect = document.getElementById("year");
+
+// unique years
+const years = [...new Set(txns.map(t => new Date(t.date).getFullYear()))];
+
+years.forEach(y => {
+  yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+});
+
+yearSelect.addEventListener("change", generate);
+
+function generate() {
+  const year = Number(yearSelect.value);
+
+  let income = 0, expense = 0;
+
+  txns.forEach(t => {
+
+    if (!t.date) return;
+
+    const d = new Date(t.date);
+    if (isNaN(d)) return;
+
+    const y = d.getFullYear();
+
+    if (y === year) {
+      const amt = Number(t.amount) || 0;
+
+      if (t.type === "income") income += amt;
+      else expense += amt;
+    }
+  });
+
+  document.getElementById("income").textContent = "₹" + income;
+  document.getElementById("expense").textContent = "₹" + expense;
+  document.getElementById("balance").textContent = "₹" + (income - expense);
+}
+if (years.length > 0) {
+  yearSelect.value = years[0];
+  generate();
+}
+</script>
+
+</body>
+</html>

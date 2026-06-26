@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FAQ - Spendly</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header class="nav">
+  <div class="nav-left">
+    <h2>💸 Spendly</h2>
+  </div>
+
+  <div class="nav-right">
+    <a href="dashboard.html" class="btn btn-secondary">Dashboard</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="faq-hero">
+  <h1>Frequently Asked Questions ❓</h1>
+  <p>Quick answers to common questions.</p>
+</section>
+
+<!-- FAQ SECTION -->
+<div class="faq-container">
+
+  <div class="faq-item">
+    <div class="faq-question">Is Spendly free?</div>
+    <div class="faq-answer">Yes. It is completely free and runs locally in your browser.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">Where is my data stored?</div>
+    <div class="faq-answer">All data is stored in your browser using localStorage. No server is involved.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">Can I use it offline?</div>
+    <div class="faq-answer">Yes. Since it uses localStorage, it works fully offline.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">Can I delete my data?</div>
+    <div class="faq-answer">Yes. You can clear localStorage from browser settings.</div>
+  </div>
+
+</div>
+
+<script>
+// toggle FAQ
+document.querySelectorAll(".faq-question").forEach(q => {
+  q.addEventListener("click", () => {
+    const item = q.parentElement;
+
+    // close others
+    document.querySelectorAll(".faq-item").forEach(i => {
+      if (i !== item) i.classList.remove("active");
+    });
+
+    // toggle current
+    item.classList.toggle("active");
+  });
+});
+</script>
+
+</body>
+</html>

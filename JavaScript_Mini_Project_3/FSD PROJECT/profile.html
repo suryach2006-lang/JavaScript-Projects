@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile - Spendly</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/forms.css">
+</head>
+
+<body class="auth-body">
+
+<div class="auth-form-panel">
+  <div class="auth-form-wrap">
+
+    <h2 class="auth-form-title">Profile</h2>
+
+    <form id="profileForm" class="auth-form">
+
+      <div class="form-group">
+        <label class="form-label">Name</label>
+        <input type="text" id="name" class="form-input no-icon">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="text" id="email" class="form-input no-icon" disabled>
+      </div>
+
+      <button type="submit" class="btn btn-full">Update Profile</button>
+
+    </form>
+
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+
+<script>
+const SESSION_KEY = "spendly_current_user";
+
+const userKey = localStorage.getItem(SESSION_KEY);
+if (!userKey) window.location.href = "login.html";
+
+const users = JSON.parse(localStorage.getItem("spendly_users") || "{}");
+const user = users[userKey];
+
+// fill data
+document.getElementById("name").value = user.name;
+document.getElementById("email").value = user.email;
+
+// update
+document.getElementById("profileForm").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const newName = document.getElementById("name").value;
+
+  user.name = newName;
+  users[userKey] = user;
+
+  localStorage.setItem("spendly_users", JSON.stringify(users));
+
+  alert("Profile updated");
+});
+</script>
+
+</body>
+</html>

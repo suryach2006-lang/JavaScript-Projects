@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View Transactions - Spendly</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+
+<header class="nav">
+  <h2>Transactions</h2>
+  <a href="dashboard.html" class="btn">← Back</a>
+</header>
+
+<div class="container">
+
+  <table border="1" width="100%" id="txnTable">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Category</th>
+        <th>Date</th>
+        <th>Note</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="txnBody">
+      <!-- Data comes here -->
+    </tbody>
+  </table>
+
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/transactions.js"></script>
+
+<script>
+// 🔐 Check login
+const user = localStorage.getItem("spendly_current_user");
+if (!user) {
+  window.location.href = "login.html";
+}
+
+// 📥 Load transactions
+const transactions = getTransactions(user);
+const tbody = document.getElementById("txnBody");
+
+if (transactions.length === 0) {
+  tbody.innerHTML = "<tr><td colspan='6'>No transactions found</td></tr>";
+} else {
+  transactions.forEach(t => {
+    const row = `
+      <tr>
+        <td>${t.type}</td>
+        <td>₹${t.amount}</td>
+        <td>${t.category}</td>
+        <td>${t.date}</td>
+        <td>${t.note || ""}</td>
+        <td>
+          <button onclick="editTxn('${t.id}')">Edit</button>
+        <button onclick="deleteTxn('${t.id}')">Delete</button>
+        </td>
+      </tr>
+    `;
+    tbody.innerHTML += row;
+  });
+}
+
+// ❌ Delete transaction
+function deleteTxn(id) {
+  let transactions = getTransactions(user);
+
+  transactions = transactions.filter(t => t.id !== id);
+
+  saveTransactions(user, transactions);
+
+  location.reload();
+}
+function editTxn(id) {
+  window.location.href = `edit-transaction.html?id=${id}`;
+}
+</script>
+
+</body>
+</html>

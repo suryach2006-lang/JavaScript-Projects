@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login – Spendly</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── CSS Variables ── */
+    :root {
+      --bg:           #ffffff;
+      --surface:      #f8f9fb;
+      --surface-2:    #f0f2f5;
+      --border:       #e8eaed;
+      --text:         #111827;
+      --text-muted:   #6b7280;
+      --text-subtle:  #9ca3af;
+      --accent:       #6366f1;
+      --accent-dark:  #4f46e5;
+      --accent-muted: #eef2ff;
+      --expense:      #ef4444;
+      --expense-muted:#fee2e2;
+      --radius-sm:    8px;
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+      --transition:   0.2s ease;
+    }
+    [data-theme="dark"] {
+      --bg:           #0f1117;
+      --surface:      #181c25;
+      --surface-2:    #1e2330;
+      --border:       #2a2f3e;
+      --text:         #f1f5f9;
+      --text-muted:   #94a3b8;
+      --text-subtle:  #64748b;
+      --accent-muted: #1e1f3a;
+      --expense-muted:#450a0a;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── Two-column layout ── */
+    .auth-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    /* ══ LEFT – decorative panel ══ */
+    .auth-panel {
+      background: var(--accent);
+      position: relative;
+      overflow: hidden;
+    }
+    .auth-panel-inner {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 52px;
+    }
+
+    /* brand */
+    .auth-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+    }
+    .auth-brand-icon {
+      width: 42px; height: 42px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+    }
+    .auth-brand-name {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    /* headline + sub */
+    .auth-panel-content { margin-top: auto; margin-bottom: 52px; }
+    .auth-panel-headline {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.2vw, 2.8rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 14px;
+    }
+    .auth-panel-sub {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 40px;
+      max-width: 320px;
+    }
+
+    /* testimonial card */
+    .auth-testimonial {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .auth-testimonial-text {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.65;
+      font-style: italic;
+      margin-bottom: 18px;
+    }
+    .auth-testimonial-author { display: flex; align-items: center; gap: 10px; }
+    .auth-testimonial-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      color: #fff;
+      font-family: var(--font-display);
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .auth-testimonial-name { font-size: 0.82rem; font-weight: 600; color: #fff; }
+    .auth-testimonial-role { font-size: 0.71rem; color: rgba(255,255,255,0.62); }
+
+    /* decorative blobs */
+    .blob { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.08); pointer-events: none; }
+    .blob-1 { width: 420px; height: 420px; top: -140px; right: -130px; }
+    .blob-2 { width: 230px; height: 230px; bottom: 60px; left: -70px; }
+
+    /* ══ RIGHT – form panel ══ */
+    .auth-form-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 52px 48px;
+      background: var(--bg);
+      overflow-y: auto;
+    }
+    .auth-form-wrap { width: 100%; max-width: 400px; }
+
+    .auth-form-header { margin-bottom: 36px; }
+    .auth-form-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -1px;
+      margin-bottom: 6px;
+    }
+    .auth-form-subtitle { font-size: 0.88rem; color: var(--text-muted); }
+
+    /* form stack */
+    .auth-form { display: flex; flex-direction: column; gap: 20px; }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 0.8rem; font-weight: 600; color: var(--text); letter-spacing: 0.2px; }
+
+    /* input */
+    .input-wrap { position: relative; display: flex; align-items: center; }
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      font-size: 15px;
+      pointer-events: none;
+      user-select: none;
+      z-index: 1;
+      line-height: 1;
+    }
+    .form-input {
+      width: 100%;
+      padding: 13px 16px 13px 44px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    }
+    .form-input::placeholder { color: var(--text-subtle); }
+    .form-input:focus {
+      border-color: var(--accent);
+      background: var(--bg);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+    }
+    .input-toggle-password {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+      color: var(--text-muted);
+      transition: color var(--transition);
+    }
+    .input-toggle-password:hover { color: var(--text); }
+
+    /* errors */
+    .form-error { font-size: 0.74rem; color: var(--expense); min-height: 16px; display: block; }
+    .form-error-global {
+      font-size: 0.82rem;
+      color: var(--expense);
+      background: var(--expense-muted);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      border-left: 3px solid var(--expense);
+      display: none;
+    }
+    .form-error-global:not(:empty) { display: block; }
+
+    /* checkbox */
+    .form-check-row { flex-direction: row !important; align-items: center; }
+    .form-check { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+    .form-check input[type="checkbox"] { display: none; }
+    .form-check-box {
+      width: 18px; height: 18px;
+      border: 1.5px solid var(--border);
+      border-radius: 5px;
+      background: var(--surface);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      transition: all var(--transition);
+    }
+    .form-check input:checked + .form-check-box { background: var(--accent); border-color: var(--accent); }
+    .form-check input:checked + .form-check-box::after { content: '✓'; color: #fff; font-size: 11px; font-weight: 700; }
+    .form-check-label { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px 24px;
+      border-radius: 50px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.92rem;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition);
+      text-decoration: none;
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.28);
+    }
+    .btn-accent:hover {
+      background: var(--accent-dark);
+      box-shadow: 0 6px 22px rgba(99,102,241,0.38);
+      transform: translateY(-1px);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1.5px solid var(--border);
+      margin-top: 0;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-muted); }
+
+    /* spinner */
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* divider */
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 22px 0;
+      color: var(--text-subtle);
+      font-size: 0.78rem;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* switch line */
+    .auth-switch { text-align: center; margin-top: 26px; font-size: 0.85rem; color: var(--text-muted); }
+    .auth-switch a { color: var(--accent); font-weight: 600; text-decoration: none; }
+    .auth-switch a:hover { text-decoration: underline; }
+
+    /* toast */
+    .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+    .toast {
+      padding: 11px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.3s, transform 0.3s;
+      max-width: 300px;
+      background: #1f2937;
+      color: #fff;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.toast-success { background: #16a34a; }
+    .toast.toast-error   { background: #dc2626; }
+
+    /* ── Responsive ── */
+    @media (max-width: 760px) {
+      .auth-layout { grid-template-columns: 1fr; }
+      .auth-panel  { display: none; }
+      .auth-form-panel { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-layout">
+
+  <!-- ══ LEFT panel ══ -->
+  <div class="auth-panel">
+    <div class="auth-panel-inner">
+      <a href="index.html" class="auth-brand">
+        <div class="auth-brand-icon">💸</div>
+        <span class="auth-brand-name">Spendly</span>
+      </a>
+
+      <div class="auth-panel-content">
+        <h2 class="auth-panel-headline">Good to have<br/>you back.</h2>
+        <p class="auth-panel-sub">Your finances are waiting. Pick up right where you left off.</p>
+
+        <div class="auth-testimonial">
+          <div class="auth-testimonial-text">
+            "I finally stopped wondering where my salary goes. Spendly makes it crystal clear."
+          </div>
+          <div class="auth-testimonial-author">
+            <div class="auth-testimonial-avatar">A</div>
+            <div>
+              <div class="auth-testimonial-name">Arjun M.</div>
+              <div class="auth-testimonial-role">Software Engineer, Bengaluru</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT form panel ══ -->
+  <div class="auth-form-panel">
+    <div class="auth-form-wrap">
+
+      <div class="auth-form-header">
+        <h1 class="auth-form-title">Welcome back</h1>
+        <p class="auth-form-subtitle">Log in to your Spendly account</p>
+      </div>
+
+      <form id="login-form" class="auth-form" novalidate>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email address</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="email" class="form-input" placeholder="you@example.com" autocomplete="email"/>
+          </div>
+          <span class="form-error" id="email-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="password" class="form-input" placeholder="Enter your password" autocomplete="current-password"/>
+            <button type="button" class="input-toggle-password" id="toggle-pass" title="Show / hide">👁️</button>
+          </div>
+          <span class="form-error" id="password-error"></span>
+        </div>
+
+        <div class="form-group form-check-row">
+          <label class="form-check">
+            <input type="checkbox" id="remember-me"/>
+            <span class="form-check-box"></span>
+            <span class="form-check-label">Remember me</span>
+          </label>
+        </div>
+
+        <div class="form-error-global" id="global-error"></div>
+
+        <button type="submit" class="btn btn-accent" id="login-btn">
+          <span id="btn-text">Log In</span>
+          <span id="btn-spinner" class="spinner" style="display:none"></span>
+        </button>
+
+      </form>
+
+      <div class="auth-divider"><span>or</span></div>
+
+      <button class="btn btn-ghost" id="demo-btn">⚡ Use Demo Account</button>
+
+      <p class="auth-switch">Don't have an account? <a href="signup.html">Sign up free</a></p>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="js/auth.js"></script>
+<script>
+  /* init theme */
+  (function () {
+    const t = localStorage.getItem('spendly_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+
+  /* redirect if logged in */
+  (function () {
+    if (localStorage.getItem('spendly_current_user'))
+      window.location.href = 'dashboard.html';
+  })();
+
+  /* toast helper */
+  function showToast(msg, type) {
+    const c = document.getElementById('toast-container');
+    const t = document.createElement('div');
+    t.className = 'toast' + (type ? ' toast-' + type : '');
+    t.textContent = msg;
+    c.appendChild(t);
+    requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
+    setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 350); }, 3000);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const form      = document.getElementById('login-form');
+    const emailEl   = document.getElementById('email');
+    const passEl    = document.getElementById('password');
+    const toggleBtn = document.getElementById('toggle-pass');
+    const demoBtn   = document.getElementById('demo-btn');
+    const globalErr = document.getElementById('global-error');
+    const btnText   = document.getElementById('btn-text');
+    const spinner   = document.getElementById('btn-spinner');
+
+    /* toggle password visibility */
+    toggleBtn.addEventListener('click', function () {
+      const show = passEl.type === 'password';
+      passEl.type = show ? 'text' : 'password';
+      toggleBtn.textContent = show ? '🙈' : '👁️';
+    });
+
+    /* clear errors on type */
+    emailEl.addEventListener('input', () => { document.getElementById('email-error').textContent = ''; });
+    passEl.addEventListener('input',  () => { document.getElementById('password-error').textContent = ''; });
+
+    /* demo account fill */
+    demoBtn.addEventListener('click', function () {
+      ensureDemoUser();
+      emailEl.value = 'demo@spendly.app';
+      passEl.value  = 'demo1234';
+      showToast('Demo credentials filled — click Log In!', 'success');
+    });
+
+    /* form submit */
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      globalErr.textContent = '';
+
+      const email    = emailEl.value.trim().toLowerCase();
+      const password = passEl.value;
+      let valid = true;
+
+      if (!email) {
+        document.getElementById('email-error').textContent = 'Email is required.';
+        valid = false;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('email-error').textContent = 'Enter a valid email address.';
+        valid = false;
+      }
+      if (!password) {
+        document.getElementById('password-error').textContent = 'Password is required.';
+        valid = false;
+      }
+      if (!valid) return;
+
+      btnText.style.display = 'none';
+      spinner.style.display = 'inline-block';
+
+      setTimeout(function () {
+        const result = loginUser(email, password);
+        btnText.style.display = 'inline';
+        spinner.style.display = 'none';
+
+        if (result.success) {
+          showToast('Logged in! Redirecting…', 'success');
+          setTimeout(() => { window.location.href = 'dashboard.html'; }, 700);
+        } else {
+          globalErr.textContent = result.message || 'Invalid email or password.';
+          passEl.value = '';
+        }
+      }, 500);
+    });
+  });
+</script>
+</body>
+</html>

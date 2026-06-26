@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Transaction - Spendly</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/forms.css">
+</head>
+
+<body class="auth-body">
+
+<div class="auth-form-panel">
+  <div class="auth-form-wrap">
+
+    <div class="auth-form-header">
+      <h2 class="auth-form-title">Add Transaction</h2>
+      <p class="auth-form-subtitle">Track your income or expense</p>
+    </div>
+
+    <form id="txnForm" class="auth-form">
+
+      <!-- TYPE -->
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <select id="type" class="form-select">
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+      </div>
+
+      <!-- AMOUNT -->
+      <div class="form-group">
+        <label class="form-label">Amount</label>
+        <input type="number" id="amount" class="form-input no-icon" placeholder="Enter amount">
+      </div>
+
+      <!-- CATEGORY -->
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <input type="text" id="category" class="form-input no-icon" placeholder="Eg: Food, Salary">
+      </div>
+
+      <!-- DATE -->
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input type="date" id="date" class="form-input no-icon">
+      </div>
+
+      <!-- NOTE -->
+      <div class="form-group">
+        <label class="form-label">Note</label>
+        <input type="text" id="note" class="form-input no-icon" placeholder="Optional">
+      </div>
+
+      <!-- BUTTON -->
+      <button type="submit" class="btn btn-full">Add Transaction</button>
+
+    </form>
+
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/transactions.js"></script>
+
+<script>
+// 🔐 Check login
+const user = localStorage.getItem("spendly_current_user");
+if (!user) {
+  window.location.href = "login.html";
+}
+
+// 🧠 Handle form submit
+document.getElementById("txnForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const type = document.getElementById("type").value;
+  const amount = Number(document.getElementById("amount").value);
+  const category = document.getElementById("category").value;
+  const date = document.getElementById("date").value;
+  const note = document.getElementById("note").value;
+
+  // basic validation
+  if (!amount || !category || !date) {
+    alert("Fill all required fields");
+    return;
+  }
+
+  addTransaction(user, {
+    type,
+    amount,
+    category,
+    date,
+    note
+  });
+
+  window.location.href = "dashboard.html";
+});
+</script>
+
+</body>
+</html>

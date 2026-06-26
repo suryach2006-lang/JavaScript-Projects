@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signup - Spendly</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/forms.css">
+</head>
+
+<body class="auth-body">
+
+<div class="auth-layout">
+
+  <!-- LEFT PANEL -->
+  <div class="auth-panel">
+    <div class="auth-panel-inner">
+
+      <a href="index.html" class="auth-brand">
+        <div class="auth-brand-icon">💰</div>
+        <span>Spendly</span>
+      </a>
+
+      <div class="auth-panel-content">
+        <h1 class="auth-panel-headline">Track your money smarter</h1>
+        <p class="auth-panel-sub">
+          Stay in control of your expenses and build better financial habits.
+        </p>
+
+        <div class="auth-testimonial">
+          <p class="auth-testimonial-text">
+            “This app completely changed how I manage my monthly budget.”
+          </p>
+          <div class="auth-testimonial-author">
+            <div class="auth-testimonial-avatar">S</div>
+            <div>
+              <div class="auth-testimonial-name">Surya</div>
+              <div class="auth-testimonial-role">Student</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="auth-form-panel">
+    <div class="auth-form-wrap">
+
+      <div class="auth-form-header">
+        <h2 class="auth-form-title">Create account</h2>
+        <p class="auth-form-subtitle">Start tracking your expenses today</p>
+      </div>
+
+      <form id="signupForm" class="auth-form">
+
+        <!-- Name -->
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="name" class="form-input" placeholder="Enter your name" required>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <div class="input-wrap">
+            <span class="input-icon">📧</span>
+            <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="password" class="form-input" placeholder="Create password" required>
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm password" required>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div id="errorMsg" class="form-error-global"></div>
+
+        <!-- Button -->
+        <button type="submit" class="btn btn-primary btn-full">
+          Sign Up
+        </button>
+
+      </form>
+
+      <div class="auth-switch">
+        Already have an account?
+        <a href="login.html">Login</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script src="js/auth.js"></script>
+
+<script>
+const form = document.getElementById("signupForm");
+const errorMsg = document.getElementById("errorMsg");
+
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  errorMsg.textContent = "";
+
+  if (password !== confirmPassword) {
+    errorMsg.textContent = "Passwords do not match";
+    return;
+  }
+
+  if (password.length < 6) {
+    errorMsg.textContent = "Password must be at least 6 characters";
+    return;
+  }
+
+  const result = registerUser(name, email, password);
+
+  if (result.success) {
+    window.location.href = "login.html";
+  } else {
+    errorMsg.textContent = result.message;
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Spendly</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header class="nav">
+  <div class="nav-left">
+    <h2>Spendly</h2>
+  </div>
+
+  <div class="nav-right">
+    <span id="userName"></span>
+    <button id="logoutBtn" class="btn btn-danger">Logout</button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="container">
+
+  <!-- SUMMARY CARDS -->
+  <section class="cards">
+    <div class="card income">
+      <h3>Income</h3>
+      <p id="totalIncome">₹0</p>
+    </div>
+
+    <div class="card expense">
+      <h3>Expenses</h3>
+      <p id="totalExpense">₹0</p>
+    </div>
+
+    <div class="card balance">
+      <h3>Balance</h3>
+      <p id="balance">₹0</p>
+    </div>
+  </section>
+
+  <!-- ACTIONS -->
+  <section class="actions">
+    <a href="add-transaction.html" class="btn">+ Add Transaction</a>
+    <a href="view-transactions.html" class="btn">View Transactions</a>
+    <a href="reports.html" class="btn">Reports</a>
+    <a href="profile.html" class="btn">Profile</a>
+    <a href="settings.html" class="btn">Settings</a>
+  </section>
+
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/transactions.js"></script>
+
+<script>
+
+// ✅ 1. CHECK LOGIN FIRST (before anything else)
+const currentUser = localStorage.getItem(SESSION_KEY);
+
+if (!currentUser) {
+  window.location.href = "login.html";
+}
+
+// ✅ 2. SAFELY LOAD USERS
+const users = JSON.parse(localStorage.getItem('spendly_users') || '{}');
+
+// extra safety (most students ignore this → crashes later)
+if (!users[currentUser]) {
+  localStorage.removeItem(SESSION_KEY);
+  window.location.href = "login.html";
+}
+
+// ✅ 3. LOAD USER NAME
+document.getElementById("userName").textContent = users[currentUser].name;
+
+// ✅ 4. LOGOUT
+document.getElementById("logoutBtn").onclick = () => {
+  console.log("clicked");   // 👈 ADD THIS LINE HERE
+  localStorage.removeItem(SESSION_KEY);
+  window.location.href = "login.html";
+};
+
+// ✅ 5. LOAD TRANSACTIONS
+const TXN_KEY = `spendly_txns_${currentUser}`;
+const transactions = JSON.parse(localStorage.getItem(TXN_KEY) || '[]');
+
+let income = 0;
+let expense = 0;
+
+// safety: ensure amount is number
+transactions.forEach(t => {
+  const amt = Number(t.amount) || 0;
+
+  if (t.type === "income") income += amt;
+  else expense += amt;
+});
+
+// ✅ 6. UPDATE UI
+document.getElementById("totalIncome").textContent = "₹" + income;
+document.getElementById("totalExpense").textContent = "₹" + expense;
+document.getElementById("balance").textContent = "₹" + (income - expense);
+
+</script>
+</body>
+</html>

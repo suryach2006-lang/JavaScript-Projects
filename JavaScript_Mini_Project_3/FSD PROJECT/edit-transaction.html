@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Transaction - Spendly</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/forms.css">
+</head>
+
+<body class="auth-body">
+
+<div class="auth-form-panel">
+  <div class="auth-form-wrap">
+
+    <div class="auth-form-header">
+      <h2 class="auth-form-title">Edit Transaction</h2>
+    </div>
+
+    <form id="editForm" class="auth-form">
+
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <select id="type" class="form-select">
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Amount</label>
+        <input type="number" id="amount" class="form-input no-icon">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <input type="text" id="category" class="form-input no-icon">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input type="date" id="date" class="form-input no-icon">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Note</label>
+        <input type="text" id="note" class="form-input no-icon">
+      </div>
+
+      <button type="submit" class="btn btn-full">Update</button>
+
+    </form>
+
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/transactions.js"></script>
+
+<script>
+// 🔐 check login
+const user = localStorage.getItem("spendly_current_user");
+if (!user) window.location.href = "login.html";
+
+// 🧠 get id from URL
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+let transactions = getTransactions(user);
+let txn = transactions.find(t => t.id === id);
+
+// ⚠️ if not found
+if (!txn) {
+  alert("Transaction not found");
+  window.location.href = "view-transactions.html";
+}
+
+
+// 📝 fill form
+document.getElementById("type").value = txn.type;
+document.getElementById("amount").value = txn.amount;
+document.getElementById("category").value = txn.category;
+document.getElementById("date").value = txn.date;
+document.getElementById("note").value = txn.note;
+
+// 🔄 update
+document.getElementById("editForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  txn.type = document.getElementById("type").value;
+  txn.amount = Number(document.getElementById("amount").value);
+  txn.category = document.getElementById("category").value;
+  txn.date = document.getElementById("date").value;
+  txn.note = document.getElementById("note").value;
+
+  saveTransactions(user, transactions);
+
+  window.location.href = "view-transactions.html";
+});
+</script>
+
+</body>
+</html>
