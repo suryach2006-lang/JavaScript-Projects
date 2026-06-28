@@ -24,3 +24,10 @@ An Expense Tracker web application built using HTML, CSS, and JavaScript. It hel
 3. Add transactions to manage your expenses.
 
 
+## Screenshot
+
+![Home Page](home-page.png)
+![login page](log-in-page.png)
+![add transaction](adding-transaction-image.png)
+![Dashboard](dashboard-image.png)
+

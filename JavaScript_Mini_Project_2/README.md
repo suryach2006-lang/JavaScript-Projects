@@ -24,4 +24,6 @@ A classic Snake Game developed using HTML, CSS, and JavaScript. Control the snak
 2. Open `index.html` in a web browser.
 3. Use the arrow keys to play.
 
+## Screenshot
 
+![Snake Game](snake-game-image.png)

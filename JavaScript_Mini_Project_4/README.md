@@ -29,3 +29,8 @@ A basic calculator built using HTML, CSS, and JavaScript. It performs standard a
 
 * Scientific calculator mode
 * Calculation history
+
+## Screenshot
+
+![calculator photos](calculator-image-1.png)
+![calculator photos](calculator-image-2.png)
