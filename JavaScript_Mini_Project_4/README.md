@@ -32,5 +32,5 @@ A basic calculator built using HTML, CSS, and JavaScript. It performs standard a
 
 ## Screenshot
 
-![calculator photos](calculator-image-1.png)
-![calculator photos](calculator-image-2.png)
+![calculator photos](images/calculator-image-1.png)
+![calculator photos](images/calculator-image-2.png)

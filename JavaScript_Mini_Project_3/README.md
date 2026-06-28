@@ -26,8 +26,8 @@ An Expense Tracker web application built using HTML, CSS, and JavaScript. It hel
 
 ## Screenshot
 
-![Home Page](home-page.png)
-![login page](log-in-page.png)
-![add transaction](adding-transaction-image.png)
-![Dashboard](dashboard-image.png)
+![Home Page](images/home-page.png)
+![login page](images/log-in-page.png)
+![add transaction](images/adding-transaction-image.png)
+![Dashboard](images/dashboard-image.png)
 
